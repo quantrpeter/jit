@@ -2,9 +2,11 @@ package com.jitcompiler;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.BeforeAll;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,8 +15,13 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class NativeCompilerTest {
     
-    @TempDir
-    Path tempDir;
+    private static Path outputDir;
+    
+    @BeforeAll
+    static void setup() throws Exception {
+        outputDir = Paths.get("output");
+        Files.createDirectories(outputDir);
+    }
     
     @Test
     @DisplayName("Native compiler initialization")
@@ -30,7 +37,7 @@ public class NativeCompilerTest {
     @DisplayName("Compile simple expression to Mach-O")
     public void testCompileExpression() throws Exception {
         NativeCompiler compiler = new NativeCompiler();
-        Path executable = tempDir.resolve("test_expr");
+        Path executable = outputDir.resolve("test_expr");
         
         Path result = compiler.compileExpression("42", executable.toString());
         
@@ -44,7 +51,7 @@ public class NativeCompilerTest {
     @DisplayName("Compile Calculator method to native")
     public void testCompileMethod() throws Exception {
         NativeCompiler compiler = new NativeCompiler();
-        Path executable = tempDir.resolve("test_method");
+        Path executable = outputDir.resolve("test_method");
         
         Path result = compiler.compileToNative(
             "com.jitcompiler.samples.Calculator",
@@ -60,7 +67,7 @@ public class NativeCompilerTest {
     @DisplayName("Compile full class to native")
     public void testCompileClass() throws Exception {
         NativeCompiler compiler = new NativeCompiler();
-        Path executable = tempDir.resolve("test_class");
+        Path executable = outputDir.resolve("test_class");
         
         Path result = compiler.compileClassToNative(
             "com.jitcompiler.samples.Calculator",
@@ -85,7 +92,7 @@ public class NativeCompilerTest {
     @DisplayName("Mach-O writer creates valid executable")
     public void testMachOWriter() throws Exception {
         MachOWriter writer = new MachOWriter("X86_64");
-        Path executable = tempDir.resolve("test_macho");
+        Path executable = outputDir.resolve("test_macho");
         
         // Simple machine code that returns 0
         byte[] machineCode = new byte[]{

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1400" width="1000" height="1400">
+  <defs>
+    <style>
+      .process { fill: #E8F4F8; stroke: #2C3E50; stroke-width: 2; }
+      .decision { fill: #FFF4E6; stroke: #E67E22; stroke-width: 2; }
+      .terminal { fill: #D5F4E6; stroke: #27AE60; stroke-width: 2; }
+      .data { fill: #F5E6FF; stroke: #8E44AD; stroke-width: 2; }
+      .text { fill: #2C3E50; font-family: 'Arial', sans-serif; font-size: 13px; text-anchor: middle; }
+      .arrow { stroke: #2C3E50; stroke-width: 2; fill: none; }
+      .arrow-head { fill: #2C3E50; stroke: none; }
+      .title { fill: #2C3E50; font-family: 'Arial', sans-serif; font-size: 22px; font-weight: bold; }
+      .subtitle { fill: #34495E; font-family: 'Arial', sans-serif; font-size: 14px; font-style: italic; }
+      .label { fill: #E67E22; font-family: 'Arial', sans-serif; font-size: 11px; font-weight: bold; }
+    </style>
+  </defs>
+  
+  <!-- White Background -->
+  <rect x="0" y="0" width="1000" height="1400" fill="white"/>
+  
+  <!-- Title -->
+  <text x="500" y="30" text-anchor="middle" class="title">JIT Compiler - Execution Flow</text>
+  <text x="500" y="50" text-anchor="middle" class="subtitle">(JIT Compilation and Native Compilation Paths)</text>
+  
+  <!-- Start -->
+  <rect x="400" y="80" width="200" height="50" class="terminal" rx="20"/>
+  <text x="500" y="110" class="text">Start: Main Entry</text>
+  
+  <!-- Decision: Compilation Type -->
+  <path d="M 500 180 L 600 220 L 500 260 L 400 220 Z" class="decision"/>
+  <text x="500" y="215" class="text">Choose</text>
+  <text x="500" y="230" class="text">Compilation Mode</text>
+  
+  <path d="M 500 130 L 500 180" class="arrow"/>
+  <polygon points="500,180 495,170 505,170" class="arrow-head"/>
+  
+  <!-- LEFT PATH: JIT COMPILATION -->
+  <text x="250" y="280" class="label">JIT MODE →</text>
+  
+  <!-- JIT: Load Class -->
+  <rect x="150" y="300" width="200" height="50" class="process"/>
+  <text x="250" y="330" class="text">Load Java Class File</text>
+  
+  <path d="M 400 220 L 250 220 L 250 300" class="arrow"/>
+  <polygon points="250,300 245,290 255,290" class="arrow-head"/>
+  <text x="320" y="215" class="label">JIT</text>
+  
+  <!-- JIT: Analyze Bytecode -->
+  <rect x="150" y="380" width="200" height="50" class="process"/>
+  <text x="250" y="405" class="text">BytecodeAnalyzer:</text>
+  <text x="250" y="420" class="text">Analyze Bytecode</text>
+  
+  <path d="M 250 350 L 250 380" class="arrow"/>
+  <polygon points="250,380 245,370 255,370" class="arrow-head"/>
+  
+  <!-- JIT: Collect Method Info -->
+  <path d="M 150 460 L 200 480 L 150 500 L 100 480 Z" transform="translate(150, 0)" class="data"/>
+  <text x="250" y="485" class="text">Gather Method Info</text>
+  <text x="250" y="500" class="text">(hotness, ops count)</text>
+  
+  <path d="M 250 430 L 250 460" class="arrow"/>
+  <polygon points="250,460 245,450 255,450" class="arrow-head"/>
+  
+  <!-- JIT: Decision - Hot Method? -->
+  <path d="M 250 550 L 320 580 L 250 610 L 180 580 Z" class="decision"/>
+  <text x="250" y="580" class="text">Is Hot</text>
+  <text x="250" y="595" class="text">Method?</text>
+  
+  <path d="M 250 500 L 250 550" class="arrow"/>
+  <polygon points="250,550 245,540 255,540" class="arrow-head"/>
+  
+  <!-- JIT: Optimize -->
+  <rect x="50" y="640" width="150" height="50" class="process"/>
+  <text x="125" y="660" class="text">Apply</text>
+  <text x="125" y="675" class="text">Optimizations</text>
+  
+  <path d="M 180 580 L 125 580 L 125 640" class="arrow"/>
+  <polygon points="125,640 120,630 130,630" class="arrow-head"/>
+  <text x="140" y="575" class="label">YES</text>
+  
+  <!-- JIT: Generate Optimized Bytecode -->
+  <rect x="150" y="720" width="200" height="50" class="process"/>
+  <text x="250" y="740" class="text">Generate Optimized</text>
+  <text x="250" y="755" class="text">Bytecode</text>
+  
+  <path d="M 125 690 L 125 745 L 150 745" class="arrow"/>
+  <polygon points="150,745 140,740 140,750" class="arrow-head"/>
+  <path d="M 250 610 L 250 640 L 250 640 L 250 720" class="arrow"/>
+  <polygon points="250,720 245,710 255,710" class="arrow-head"/>
+  <text x="260" y="630" class="label">NO</text>
+  
+  <!-- JIT: Load with ClassLoader -->
+  <rect x="150" y="800" width="200" height="50" class="process"/>
+  <text x="250" y="820" class="text">DynamicClassLoader:</text>
+  <text x="250" y="835" class="text">Load Compiled Class</text>
+  
+  <path d="M 250 770 L 250 800" class="arrow"/>
+  <polygon points="250,800 245,790 255,790" class="arrow-head"/>
+  
+  <!-- JIT: Return CompiledClass -->
+  <rect x="150" y="880" width="200" height="50" class="terminal" rx="20"/>
+  <text x="250" y="900" class="text">Return CompiledClass</text>
+  <text x="250" y="915" class="text">with Methods</text>
+  
+  <path d="M 250 850 L 250 880" class="arrow"/>
+  <polygon points="250,880 245,870 255,870" class="arrow-head"/>
+  
+  <!-- JIT: Execute -->
+  <rect x="150" y="960" width="200" height="50" class="process"/>
+  <text x="250" y="985" class="text">Execute via Reflection</text>
+  
+  <path d="M 250 930 L 250 960" class="arrow"/>
+  <polygon points="250,960 245,950 255,950" class="arrow-head"/>
+  
+  <!-- RIGHT PATH: NATIVE COMPILATION -->
+  <text x="750" y="280" class="label">← NATIVE MODE</text>
+  
+  <!-- Native: Load Class -->
+  <rect x="650" y="300" width="200" height="50" class="process"/>
+  <text x="750" y="330" class="text">Load Java Class File</text>
+  
+  <path d="M 600 220 L 750 220 L 750 300" class="arrow"/>
+  <polygon points="750,300 745,290 755,290" class="arrow-head"/>
+  <text x="680" y="215" class="label">NATIVE</text>
+  
+  <!-- Native: Analyze Bytecode -->
+  <rect x="650" y="380" width="200" height="50" class="process"/>
+  <text x="750" y="405" class="text">BytecodeAnalyzer:</text>
+  <text x="750" y="420" class="text">Analyze Bytecode</text>
+  
+  <path d="M 750 350 L 750 380" class="arrow"/>
+  <polygon points="750,380 745,370 755,370" class="arrow-head"/>
+  
+  <!-- Native: Find Main Method -->
+  <rect x="650" y="460" width="200" height="50" class="process"/>
+  <text x="750" y="480" class="text">Find Executable</text>
+  <text x="750" y="495" class="text">Method (main/static)</text>
+  
+  <path d="M 750 430 L 750 460" class="arrow"/>
+  <polygon points="750,460 745,450 755,450" class="arrow-head"/>
+  
+  <!-- Native: Generate Machine Code -->
+  <rect x="650" y="540" width="200" height="50" class="process"/>
+  <text x="750" y="560" class="text">MachineCodeGenerator:</text>
+  <text x="750" y="575" class="text">Generate Native Code</text>
+  
+  <path d="M 750 510 L 750 540" class="arrow"/>
+  <polygon points="750,540 745,530 755,530" class="arrow-head"/>
+  
+  <!-- Native: Architecture Detection -->
+  <path d="M 750 620 L 820 650 L 750 680 L 680 650 Z" class="decision"/>
+  <text x="750" y="655" class="text">ARM64 or</text>
+  <text x="750" y="670" class="text">x86_64?</text>
+  
+  <path d="M 750 590 L 750 620" class="arrow"/>
+  <polygon points="750,620 745,610 755,610" class="arrow-head"/>
+  
+  <!-- Native: Generate Prologue/Epilogue -->
+  <rect x="650" y="710" width="200" height="50" class="process"/>
+  <text x="750" y="730" class="text">Generate Arch-Specific</text>
+  <text x="750" y="745" class="text">Prologue &amp; Epilogue</text>
+  
+  <path d="M 750 680 L 750 710" class="arrow"/>
+  <polygon points="750,710 745,700 755,700" class="arrow-head"/>
+  
+  <!-- Native: Translate Instructions -->
+  <rect x="650" y="790" width="200" height="50" class="process"/>
+  <text x="750" y="810" class="text">Translate Bytecode to</text>
+  <text x="750" y="825" class="text">Machine Instructions</text>
+  
+  <path d="M 750 760 L 750 790" class="arrow"/>
+  <polygon points="750,790 745,780 755,780" class="arrow-head"/>
+  
+  <!-- Native: Write Mach-O -->
+  <rect x="650" y="870" width="200" height="50" class="process"/>
+  <text x="750" y="890" class="text">MachOWriter:</text>
+  <text x="750" y="905" class="text">Create Mach-O Executable</text>
+  
+  <path d="M 750 840 L 750 870" class="arrow"/>
+  <polygon points="750,870 745,860 755,860" class="arrow-head"/>
+  
+  <!-- Native: Set Permissions -->
+  <rect x="650" y="950" width="200" height="50" class="process"/>
+  <text x="750" y="970" class="text">Make File</text>
+  <text x="750" y="985" class="text">Executable (chmod +x)</text>
+  
+  <path d="M 750 920 L 750 950" class="arrow"/>
+  <polygon points="750,950 745,940 755,940" class="arrow-head"/>
+  
+  <!-- Native: Output Executable -->
+  <rect x="650" y="1030" width="200" height="50" class="terminal" rx="20"/>
+  <text x="750" y="1050" class="text">Output Native</text>
+  <text x="750" y="1065" class="text">Executable File</text>
+  
+  <path d="M 750 1000 L 750 1030" class="arrow"/>
+  <polygon points="750,1030 745,1020 755,1020" class="arrow-head"/>
+  
+  <!-- Merge paths -->
+  <path d="M 250 1010 L 250 1120 L 500 1120" class="arrow"/>
+  <polygon points="500,1120 490,1115 490,1125" class="arrow-head"/>
+  <path d="M 750 1080 L 750 1120 L 500 1120" class="arrow"/>
+  <polygon points="500,1120 510,1115 510,1125" class="arrow-head"/>
+  
+  <!-- End -->
+  <rect x="400" y="1120" width="200" height="50" class="terminal" rx="20"/>
+  <text x="500" y="1150" class="text">End: Ready to Execute</text>
+  
+  <!-- Legend -->
+  <rect x="50" y="1230" width="900" height="140" fill="none" stroke="#95A5A6" stroke-width="1"/>
+  <text x="60" y="1255" class="text" text-anchor="start" font-weight="bold">Legend:</text>
+  
+  <rect x="70" y="1270" width="80" height="30" class="terminal"/>
+  <text x="110" y="1290" class="text" font-size="11px">Terminal</text>
+  
+  <rect x="180" y="1270" width="80" height="30" class="process"/>
+  <text x="220" y="1290" class="text" font-size="11px">Process</text>
+  
+  <path d="M 290 1285 L 330 1295 L 290 1305 L 250 1295 Z" class="decision"/>
+  <text x="290" y="1298" class="text" font-size="11px">Decision</text>
+  
+  <path d="M 360 1285 L 400 1295 L 360 1305 L 320 1295 Z" class="data"/>
+  <text x="360" y="1298" class="text" font-size="11px">Data</text>
+  
+  <text x="70" y="1345" class="text" text-anchor="start" font-size="11px">
+    <tspan x="70" dy="0">• JIT Mode: Compiles bytecode to optimized bytecode, loads dynamically</tspan>
+    <tspan x="70" dy="15">• Native Mode: Compiles bytecode to native machine code (ARM64/x86_64) Mach-O executable</tspan>
+  </text>
+</svg>

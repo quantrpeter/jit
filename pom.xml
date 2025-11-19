@@ -93,6 +93,14 @@
                 <configuration>
                     <mainClass>com.jitcompiler.Main</mainClass>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>native</id>
+                        <configuration>
+                            <mainClass>com.jitcompiler.NativeMain</mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

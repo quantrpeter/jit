@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900">
+  <defs>
+    <style>
+      .class-box { fill: #E8F4F8; stroke: #2C3E50; stroke-width: 2; }
+      .class-name { fill: #2C3E50; font-family: 'Arial', sans-serif; font-size: 14px; font-weight: bold; }
+      .class-attr { fill: #34495E; font-family: 'Courier New', monospace; font-size: 11px; }
+      .class-method { fill: #34495E; font-family: 'Courier New', monospace; font-size: 11px; }
+      .line { stroke: #2C3E50; stroke-width: 2; fill: none; }
+      .arrow { fill: none; stroke: #2C3E50; stroke-width: 2; }
+      .arrow-head { fill: #2C3E50; }
+      .interface { fill: #FFF4E6; stroke: #E67E22; stroke-width: 2; }
+      .title { fill: #2C3E50; font-family: 'Arial', sans-serif; font-size: 20px; font-weight: bold; }
+    </style>
+  </defs>
+  
+  <!-- White Background -->
+  <rect x="0" y="0" width="1200" height="900" fill="white"/>
+  
+  <!-- Title -->
+  <text x="600" y="30" text-anchor="middle" class="title">JIT Compiler - Class Diagram</text>
+  
+  <!-- BytecodeAnalyzer -->
+  <rect x="50" y="60" width="250" height="180" class="class-box"/>
+  <text x="175" y="85" text-anchor="middle" class="class-name">BytecodeAnalyzer</text>
+  <line x1="50" y1="95" x2="300" y2="95" class="line"/>
+  <text x="60" y="115" class="class-attr">- classNode: ClassNode</text>
+  <text x="60" y="130" class="class-attr">- className: String</text>
+  <text x="60" y="145" class="class-attr">- methodInfoMap: Map</text>
+  <line x1="50" y1="155" x2="300" y2="155" class="line"/>
+  <text x="60" y="175" class="class-method">+ analyze(String): void</text>
+  <text x="60" y="190" class="class-method">+ analyze(InputStream): void</text>
+  <text x="60" y="205" class="class-method">+ printBytecode(): void</text>
+  <text x="60" y="220" class="class-method">+ getClassNode(): ClassNode</text>
+  
+  <!-- MachineCodeGenerator -->
+  <rect x="350" y="60" width="280" height="200" class="class-box"/>
+  <text x="490" y="85" text-anchor="middle" class="class-name">MachineCodeGenerator</text>
+  <line x1="350" y1="95" x2="630" y2="95" class="line"/>
+  <text x="360" y="115" class="class-attr">- architecture: String</text>
+  <text x="360" y="130" class="class-attr">- machineCode: List&lt;Byte&gt;</text>
+  <text x="360" y="145" class="class-attr">- labelPositions: Map</text>
+  <text x="360" y="160" class="class-attr">- codeOffset: int</text>
+  <line x1="350" y1="170" x2="630" y2="170" class="line"/>
+  <text x="360" y="190" class="class-method">+ generateMethodCode(): byte[]</text>
+  <text x="360" y="205" class="class-method">- generatePrologue(): void</text>
+  <text x="360" y="220" class="class-method">- generateEpilogue(): void</text>
+  <text x="360" y="235" class="class-method">- generateInstruction(): void</text>
+  <text x="360" y="250" class="class-method">+ getArchitecture(): String</text>
+  
+  <!-- MachOWriter -->
+  <rect x="680" y="60" width="250" height="180" class="class-box"/>
+  <text x="805" y="85" text-anchor="middle" class="class-name">MachOWriter</text>
+  <line x1="680" y1="95" x2="930" y2="95" class="line"/>
+  <text x="690" y="115" class="class-attr">- architecture: String</text>
+  <text x="690" y="130" class="class-attr">- outputStream: ByteArrayOutputStream</text>
+  <text x="690" y="145" class="class-attr">- buffer: ByteBuffer</text>
+  <line x1="680" y1="155" x2="930" y2="155" class="line"/>
+  <text x="690" y="175" class="class-method">+ writeExecutable(): void</text>
+  <text x="690" y="190" class="class-method">- writeMachHeader(): void</text>
+  <text x="690" y="205" class="class-method">- writeSegmentCommand(): void</text>
+  <text x="690" y="220" class="class-method">- writeSection(): void</text>
+  
+  <!-- JitCompiler -->
+  <rect x="50" y="320" width="280" height="200" class="class-box"/>
+  <text x="190" y="345" text-anchor="middle" class="class-name">JitCompiler</text>
+  <line x1="50" y1="355" x2="330" y2="355" class="line"/>
+  <text x="60" y="375" class="class-attr">- analyzer: BytecodeAnalyzer</text>
+  <text x="60" y="390" class="class-attr">- compiledMethods: Map</text>
+  <text x="60" y="405" class="class-attr">- classLoader: ClassLoader</text>
+  <text x="60" y="420" class="class-attr">- optimizationEnabled: boolean</text>
+  <line x1="50" y1="430" x2="330" y2="430" class="line"/>
+  <text x="60" y="450" class="class-method">+ compile(String): CompiledClass</text>
+  <text x="60" y="465" class="class-method">+ compile(InputStream): CompiledClass</text>
+  <text x="60" y="480" class="class-method">- compileClass(): byte[]</text>
+  <text x="60" y="495" class="class-method">- compileMethod(): void</text>
+  <text x="60" y="510" class="class-method">- optimizeMethod(): void</text>
+  
+  <!-- NativeCompiler -->
+  <rect x="400" y="320" width="280" height="200" class="class-box"/>
+  <text x="540" y="345" text-anchor="middle" class="class-name">NativeCompiler</text>
+  <line x1="400" y1="355" x2="680" y2="355" class="line"/>
+  <text x="410" y="375" class="class-attr">- analyzer: BytecodeAnalyzer</text>
+  <text x="410" y="390" class="class-attr">- codeGenerator: MachineCodeGenerator</text>
+  <text x="410" y="405" class="class-attr">- architecture: String</text>
+  <line x1="400" y1="415" x2="680" y2="415" class="line"/>
+  <text x="410" y="435" class="class-method">+ compileToNative(): Path</text>
+  <text x="410" y="450" class="class-method">+ compileClassToNative(): Path</text>
+  <text x="410" y="465" class="class-method">- findExecutableMethod(): MethodNode</text>
+  <text x="410" y="480" class="class-method">- generateStartupCode(): byte[]</text>
+  <text x="410" y="495" class="class-method">- makeExecutable(): void</text>
+  
+  <!-- CompiledClass (inner class) -->
+  <rect x="750" y="320" width="200" height="120" class="class-box"/>
+  <text x="850" y="345" text-anchor="middle" class="class-name">CompiledClass</text>
+  <line x1="750" y1="355" x2="950" y2="355" class="line"/>
+  <text x="760" y="375" class="class-attr">- clazz: Class&lt;?&gt;</text>
+  <text x="760" y="390" class="class-attr">- methods: Map</text>
+  <line x1="750" y1="400" x2="950" y2="400" class="line"/>
+  <text x="760" y="420" class="class-method">+ newInstance(): Object</text>
+  
+  <!-- Main -->
+  <rect x="50" y="580" width="200" height="100" class="class-box"/>
+  <text x="150" y="605" text-anchor="middle" class="class-name">Main</text>
+  <line x1="50" y1="615" x2="250" y2="615" class="line"/>
+  <text x="60" y="635" class="class-method">+ main(String[]): void</text>
+  <text x="60" y="650" class="class-method">- demonstrateCalculator()</text>
+  <text x="60" y="665" class="class-method">- demonstratePerformance()</text>
+  
+  <!-- Calculator -->
+  <rect x="300" y="580" width="200" height="120" class="class-box"/>
+  <text x="400" y="605" text-anchor="middle" class="class-name">Calculator</text>
+  <line x1="300" y1="615" x2="500" y2="615" class="line"/>
+  <text x="310" y="635" class="class-method">+ add(int, int): int</text>
+  <text x="310" y="650" class="class-method">+ subtract(int, int): int</text>
+  <text x="310" y="665" class="class-method">+ multiply(int, int): int</text>
+  <text x="310" y="680" class="class-method">+ fibonacci(int): int</text>
+  
+  <!-- StringProcessor -->
+  <rect x="550" y="580" width="220" height="120" class="class-box"/>
+  <text x="660" y="605" text-anchor="middle" class="class-name">StringProcessor</text>
+  <line x1="550" y1="615" x2="770" y2="615" class="line"/>
+  <text x="560" y="635" class="class-method">+ reverse(String): String</text>
+  <text x="560" y="650" class="class-method">+ countVowels(String): int</text>
+  <text x="560" y="665" class="class-method">+ isPalindrome(String): boolean</text>
+  <text x="560" y="680" class="class-method">+ toUpperCase(String): String</text>
+  
+  <!-- NativeMain -->
+  <rect x="820" y="580" width="180" height="80" class="class-box"/>
+  <text x="910" y="605" text-anchor="middle" class="class-name">NativeMain</text>
+  <line x1="820" y1="615" x2="1000" y2="615" class="line"/>
+  <text x="830" y="635" class="class-method">+ main(String[]): void</text>
+  <text x="830" y="650" class="class-method">- compileNative(): void</text>
+  
+  <!-- Relationships -->
+  
+  <!-- JitCompiler uses BytecodeAnalyzer -->
+  <path d="M 175 240 L 175 320" class="arrow" marker-end="url(#arrowhead)"/>
+  <polygon points="175,240 170,250 180,250" class="arrow-head"/>
+  
+  <!-- NativeCompiler uses BytecodeAnalyzer -->
+  <path d="M 460 320 L 460 280 L 250 280 L 250 240" class="arrow" marker-end="url(#arrowhead)"/>
+  <polygon points="250,240 245,250 255,250" class="arrow-head"/>
+  
+  <!-- NativeCompiler uses MachineCodeGenerator -->
+  <path d="M 490 320 L 490 260" class="arrow" marker-end="url(#arrowhead)"/>
+  <polygon points="490,260 485,270 495,270" class="arrow-head"/>
+  
+  <!-- NativeCompiler uses MachOWriter -->
+  <path d="M 680 380 L 740 380 L 740 240" class="arrow" marker-end="url(#arrowhead)"/>
+  <polygon points="740,240 735,250 745,250" class="arrow-head"/>
+  
+  <!-- JitCompiler creates CompiledClass -->
+  <path d="M 330 380 L 750 380" class="arrow" stroke-dasharray="5,5"/>
+  <polygon points="750,380 740,375 740,385" class="arrow-head"/>
+  
+  <!-- Main uses JitCompiler -->
+  <path d="M 150 520 L 150 540 L 150 540" class="arrow"/>
+  <text x="160" y="555" class="class-attr" font-size="10px">«uses»</text>
+  
+  <!-- NativeMain uses NativeCompiler -->
+  <path d="M 820 620 L 680 480" class="arrow" stroke-dasharray="5,5"/>
+  <polygon points="680,480 685,490 690,480" class="arrow-head"/>
+  
+  <!-- Legend -->
+  <rect x="50" y="750" width="300" height="100" fill="none" stroke="#95A5A6" stroke-width="1"/>
+  <text x="60" y="770" class="class-name">Legend:</text>
+  <line x1="60" y1="790" x2="120" y2="790" class="arrow"/>
+  <polygon points="120,790 110,785 110,795" class="arrow-head"/>
+  <text x="130" y="795" class="class-attr">Composition/Uses</text>
+  
+  <line x1="60" y1="815" x2="120" y2="815" class="arrow" stroke-dasharray="5,5"/>
+  <polygon points="120,815 110,810 110,820" class="arrow-head"/>
+  <text x="130" y="820" class="class-attr">Dependency/Creates</text>
+</svg>

@@ -70,9 +70,9 @@ public class MachOWriter {
         int headerSize = 32;  // mach_header_64
         int segmentCommandSize = 72;  // segment_command_64
         int sectionSize = 80;  // section_64
-        int threadCommandSize = "ARM64".equals(architecture) ? 184 : 184;  // thread_command
+        int mainCommandSize = 24;  // LC_MAIN command
         
-        int loadCommandsSize = segmentCommandSize + sectionSize + threadCommandSize;
+        int loadCommandsSize = segmentCommandSize + sectionSize + mainCommandSize;
         int totalHeaderSize = headerSize + loadCommandsSize;
         int codeOffset = ((totalHeaderSize + pageSize - 1) / pageSize) * pageSize;
         
@@ -88,7 +88,8 @@ public class MachOWriter {
                     VM_PROT_READ | VM_PROT_EXECUTE);
         
         // Write thread/main command
-        writeMainCommand(entryPoint + codeOffset);
+        // LC_MAIN expects offset from __TEXT segment (which starts at file offset codeOffset)
+        writeMainCommand(entryPoint);
         
         // Pad to code offset
         while (outputStream.size() < codeOffset) {
@@ -235,8 +236,8 @@ public class MachOWriter {
         // Command size
         buffer.putInt(24);
         
-        // Entry offset
-        buffer.putLong(entrypoint - 0x100000000L);
+        // Entry offset (file offset from start of __TEXT segment)
+        buffer.putLong(entrypoint);
         
         // Stack size
         buffer.putLong(0);

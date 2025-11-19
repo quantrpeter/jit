@@ -1,6 +1,8 @@
 package com.jitcompiler;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 
 /**
  * Demo for native Mach-O compilation
@@ -13,34 +15,39 @@ public class NativeMain {
         System.out.println("╚═══════════════════════════════════════════════════╝\n");
         
         try {
+            // Create output directory
+            Path outputDir = Paths.get("output");
+            Files.createDirectories(outputDir);
+            
             NativeCompiler nativeCompiler = new NativeCompiler();
             
             System.out.println("System Architecture: " + nativeCompiler.getArchitecture());
             System.out.println("OS: " + System.getProperty("os.name"));
             System.out.println("OS Arch: " + System.getProperty("os.arch"));
+            System.out.println("Output Directory: " + outputDir.toAbsolutePath());
             
             // Demo 1: Compile a simple expression
-            demonstrateExpressionCompilation(nativeCompiler);
+            demonstrateExpressionCompilation(nativeCompiler, outputDir);
             
             System.out.println("\n" + "=".repeat(60) + "\n");
             
             // Demo 2: Compile a Calculator method
-            demonstrateMethodCompilation(nativeCompiler);
+            demonstrateMethodCompilation(nativeCompiler, outputDir);
             
             System.out.println("\n" + "=".repeat(60) + "\n");
             
             // Demo 3: Compile full class
-            demonstrateClassCompilation(nativeCompiler);
+            demonstrateClassCompilation(nativeCompiler, outputDir);
             
             System.out.println("\n╔═══════════════════════════════════════════════════╗");
             System.out.println("║   Demo Complete                                   ║");
             System.out.println("╚═══════════════════════════════════════════════════╝");
-            System.out.println("\nGenerated executables:");
+            System.out.println("\nGenerated executables in output/:");
             System.out.println("  • simple_expr      - Returns 42");
-            System.out.println("  • calculator_add   - Calculator add method");
+            System.out.println("  • calculator       - Calculator add method");
             System.out.println("  • calculator_full  - Full Calculator class");
             System.out.println("\nNote: These are native Mach-O executables!");
-            System.out.println("Run them with: ./simple_expr");
+            System.out.println("Run them with: ./output/calculator");
             
         } catch (Exception e) {
             System.err.println("Error during native compilation:");
@@ -48,12 +55,12 @@ public class NativeMain {
         }
     }
     
-    private static void demonstrateExpressionCompilation(NativeCompiler compiler) {
+    private static void demonstrateExpressionCompilation(NativeCompiler compiler, Path outputDir) {
         System.out.println("📐 DEMO 1: Simple Expression Compilation");
         System.out.println("─".repeat(60));
         
         try {
-            Path executable = compiler.compileExpression("42", "simple_expr");
+            Path executable = compiler.compileExpression("42", outputDir.resolve("simple_expr").toString());
             System.out.println("\n✓ Created native executable: " + executable.getFileName());
             System.out.println("  This is a real Mach-O binary that returns 42");
             System.out.println("  File size: " + executable.toFile().length() + " bytes");
@@ -67,14 +74,14 @@ public class NativeMain {
         }
     }
     
-    private static void demonstrateMethodCompilation(NativeCompiler compiler) {
+    private static void demonstrateMethodCompilation(NativeCompiler compiler, Path outputDir) {
         System.out.println("🔢 DEMO 2: Calculator Method Compilation");
         System.out.println("─".repeat(60));
         
         try {
             Path executable = compiler.compileToNative(
                 "com.jitcompiler.samples.Calculator",
-                "calculator_add"
+                outputDir.resolve("calculator").toString()
             );
             
             System.out.println("\n✓ Created native executable: " + executable.getFileName());
@@ -89,14 +96,14 @@ public class NativeMain {
         }
     }
     
-    private static void demonstrateClassCompilation(NativeCompiler compiler) {
+    private static void demonstrateClassCompilation(NativeCompiler compiler, Path outputDir) {
         System.out.println("📦 DEMO 3: Full Class Compilation");
         System.out.println("─".repeat(60));
         
         try {
             Path executable = compiler.compileClassToNative(
                 "com.jitcompiler.samples.Calculator",
-                "calculator_full"
+                outputDir.resolve("calculator_full").toString()
             );
             
             System.out.println("\n✓ Created native executable: " + executable.getFileName());
