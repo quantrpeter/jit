@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <name>Java Bytecode JIT Compiler</name>
-    <description>A JIT compiler that compiles Java class bytecode into executable code</description>
+    <description>A JIT compiler that compiles Java class bytecode into executable code and native Mach-O binaries</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -40,6 +40,13 @@
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-analysis</artifactId>
             <version>9.6</version>
+        </dependency>
+        
+        <!-- JNR-FFI for native code execution -->
+        <dependency>
+            <groupId>com.github.jnr</groupId>
+            <artifactId>jnr-ffi</artifactId>
+            <version>2.2.16</version>
         </dependency>
         
         <!-- JUnit for testing -->
@@ -90,4 +97,3 @@
         </plugins>
     </build>
 </project>
-
