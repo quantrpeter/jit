@@ -9,7 +9,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 /**
- * Compiles Java bytecode to native Mach-O executables
+ * Compiles Java bytecode to native ELF executables
  */
 public class NativeCompiler {
     
@@ -24,11 +24,11 @@ public class NativeCompiler {
     }
     
     /**
-     * Compile a Java class to a native Mach-O executable
+     * Compile a Java class to a native ELF executable
      */
     public Path compileToNative(String className, String outputFileName) throws Exception {
         System.out.println("\n╔════════════════════════════════════════════════╗");
-        System.out.println("║   Native Mach-O Compilation Started            ║");
+        System.out.println("║   Native ELF Compilation Started               ║");
         System.out.println("╚════════════════════════════════════════════════╝");
         System.out.println("Class: " + className);
         System.out.println("Target: " + outputFileName);
@@ -59,10 +59,10 @@ public class NativeCompiler {
         System.out.println("\n=== Generating Native Code ===");
         byte[] machineCode = codeGenerator.generateMethodCode(targetMethod);
         
-        // Write Mach-O executable
-        System.out.println("\n=== Creating Mach-O Executable ===");
+        // Write ELF executable
+        System.out.println("\n=== Creating ELF Executable ===");
         Path outputPath = Paths.get(outputFileName);
-        MachOWriter writer = new MachOWriter(architecture);
+        ELFWriter writer = new ELFWriter(architecture);
         writer.writeExecutable(outputPath, machineCode, 0);
         
         System.out.println("\n╔════════════════════════════════════════════════╗");
@@ -112,7 +112,7 @@ public class NativeCompiler {
         
         // Create executable
         Path outputPath = Paths.get(outputFileName);
-        MachOWriter writer = new MachOWriter(architecture);
+        ELFWriter writer = new ELFWriter(architecture);
         writer.writeExecutable(outputPath, combinedCode, 0);
         
         System.out.println("\n✓ Native executable created: " + outputPath.toAbsolutePath());
@@ -132,7 +132,7 @@ public class NativeCompiler {
         byte[] machineCode = generateExpressionCode(expression);
         
         Path outputPath = Paths.get(outputFileName);
-        MachOWriter writer = new MachOWriter(architecture);
+        ELFWriter writer = new ELFWriter(architecture);
         writer.writeExecutable(outputPath, machineCode, 0);
         
         System.out.println("✓ Expression compiled to: " + outputPath.toAbsolutePath());
