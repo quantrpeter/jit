@@ -1,22 +1,38 @@
 # Java Bytecode JIT Compiler
 
-A simple Just-In-Time (JIT) compiler that compiles Java class bytecode into optimized executable code using Java and Maven.
+A JIT compiler that compiles Java class bytecode into both optimized bytecode and native ELF executables using Java and Maven.
 
 ## Overview
 
-This project demonstrates a JIT compiler implementation in Java that:
+This project demonstrates two compilation modes:
+
+### 1. JIT Mode (Bytecode Optimization)
 - Reads and analyzes Java bytecode from `.class` files
 - Applies optimizations (constant folding, dead code elimination)
 - Dynamically compiles and loads optimized bytecode
 - Executes the compiled code at runtime
 
+### 2. Native Mode (ELF Executable Generation)
+- Compiles Java bytecode to native x86-64 machine code
+- Generates standalone ELF executables for Linux
+- Produces real binaries that can run without a JVM
+- Supports Docker execution on macOS
+
 ## Features
 
+### JIT Compilation
 - ✅ **Bytecode Analysis**: Deep inspection of Java bytecode structure
 - ✅ **Hot Method Detection**: Identifies methods that would benefit from JIT compilation
 - ✅ **Optimization**: Applies constant folding and dead code elimination
 - ✅ **Dynamic Loading**: Loads and executes compiled bytecode at runtime
 - ✅ **Performance Metrics**: Tracks method execution and optimization statistics
+
+### Native Compilation
+- ✅ **Machine Code Generation**: Converts bytecode to native x86-64 assembly
+- ✅ **ELF Executable Format**: Generates Linux-compatible binaries
+- ✅ **Standalone Executables**: No JVM required for execution
+- ✅ **Docker Support**: Run ELF binaries on macOS via Docker
+- ✅ **Multiple Architectures**: Support for x86-64 and ARM64 code generation
 
 ## Project Structure
 
@@ -24,22 +40,34 @@ This project demonstrates a JIT compiler implementation in Java that:
 jit/
 ├── pom.xml                                    # Maven configuration
 ├── README.md                                  # This file
+├── Dockerfile                                 # Docker image for running ELF executables
+├── run_docker.sh                              # Script to build and run in Docker
+├── test_native.sh                             # Script to test native compilation
+├── output/                                    # Generated ELF executables
+│   ├── simple_expr                            # Native executable returning 42
+│   ├── calculator                             # Native Calculator.add() method
+│   └── calculator_full                        # Full Calculator class
 └── src/
     ├── main/
     │   └── java/
     │       └── com/
     │           └── jitcompiler/
-    │               ├── BytecodeAnalyzer.java  # Analyzes Java bytecode
-    │               ├── JitCompiler.java       # Main JIT compiler
-    │               ├── Main.java              # Demo application
+    │               ├── BytecodeAnalyzer.java      # Analyzes Java bytecode
+    │               ├── JitCompiler.java           # JIT bytecode compiler
+    │               ├── NativeCompiler.java        # Native code compiler
+    │               ├── MachineCodeGenerator.java  # x86-64/ARM64 code generation
+    │               ├── ELFWriter.java             # ELF executable writer
+    │               ├── Main.java                  # JIT demo application
+    │               ├── NativeMain.java            # Native compilation demo
     │               └── samples/
-    │                   ├── Calculator.java    # Sample class for compilation
+    │                   ├── Calculator.java        # Sample class for compilation
     │                   └── StringProcessor.java
     └── test/
         └── java/
             └── com/
                 └── jitcompiler/
                     ├── JitCompilerTest.java
+                    ├── NativeCompilerTest.java
                     └── BytecodeAnalyzerTest.java
 ```
 
@@ -64,24 +92,63 @@ mvn test
 mvn package
 ```
 
-## Running the Demo
+## Running the Demos
 
-There are several ways to run the demo:
+### JIT Compilation Demo
 
-### Option 1: Using Maven exec plugin
+Run the JIT bytecode compiler:
+
 ```bash
+# Using Maven exec plugin (default)
+mvn compile exec:java
+
+# Or with explicit main class
 mvn exec:java -Dexec.mainClass="com.jitcompiler.Main"
-```
 
-### Option 2: Using the packaged JAR
-```bash
+# Or using packaged JAR
 mvn package
 java -jar target/java-bytecode-jit-1.0-SNAPSHOT.jar
 ```
 
-### Option 3: Direct execution with Maven
+### Native Compilation Demo
+
+Generate native ELF executables:
+
 ```bash
-mvn compile exec:java
+# Run native compilation demo
+mvn compile exec:java@native
+
+# This generates three executables in output/:
+# - simple_expr      (returns 42)
+# - calculator       (Calculator.add method)
+# - calculator_full  (full Calculator class)
+```
+
+### Running ELF Executables
+
+#### On Linux
+```bash
+# Executables run directly on Linux
+./output/simple_expr
+echo $?  # Shows exit code: 42
+
+./output/calculator
+echo $?  # Shows exit code: 0
+```
+
+#### On macOS (using Docker)
+```bash
+# Build Docker image and run all executables
+./run_docker.sh
+
+# Or manually:
+docker build -t jit-elf-runner .
+docker run --rm jit-elf-runner /app/simple_expr
+echo $?  # Shows exit code
+
+# Interactive shell
+docker run --rm -it jit-elf-runner bash
+# Then: /app/calculator
 ```
 
 ## How It Works
@@ -181,6 +248,7 @@ JIT: Optimizing hot method: complexCalculation
 - Uses ASM library to read and parse bytecode
 - Builds a method information map
 - Identifies optimization opportunities
+- Detects hot methods for JIT compilation
 
 ### JitCompiler
 - Compiles bytecode with optimizations
@@ -188,8 +256,27 @@ JIT: Optimizing hot method: complexCalculation
 - Implements custom ClassLoader for dynamic loading
 - Tracks compiled methods and execution statistics
 
+### NativeCompiler
+- Compiles Java bytecode to native machine code
+- Generates x86-64 or ARM64 assembly instructions
+- Creates standalone ELF executables
+- No JVM required for execution
+
+### MachineCodeGenerator
+- Translates Java bytecode operations to native instructions
+- Supports x86-64 and ARM64 architectures
+- Implements register allocation and stack management
+- Generates optimized assembly for arithmetic operations
+
+### ELFWriter
+- Creates Linux ELF64 executable files
+- Writes proper ELF headers and program headers
+- Wraps machine code with _start entry point
+- Implements exit syscall wrapper (syscall 60)
+- Sets executable permissions
+
 ### Sample Classes
-- `Calculator`: Mathematical operations for JIT compilation
+- `Calculator`: Mathematical operations for compilation
 - `StringProcessor`: String manipulation demonstrations
 
 ## Testing
@@ -235,10 +322,14 @@ This is a simplified JIT compiler for demonstration purposes. Production JIT com
 Potential improvements:
 - [ ] Method inlining
 - [ ] Loop unrolling
-- [ ] Native code generation (via LLVM or similar)
+- [x] Native code generation (ELF x86-64 executables)
 - [ ] Tiered compilation
 - [ ] Profile-guided optimization
 - [ ] Escape analysis
+- [ ] Native ARM64 executable testing
+- [ ] Parameter passing for native executables
+- [ ] More complex bytecode instruction support
+- [ ] Dynamic linking and library support
 
 ## License
 
@@ -248,11 +339,31 @@ This project is provided for educational purposes.
 
 Feel free to fork this project and experiment with additional optimizations!
 
+## Docker Support
+
+Since ELF executables are Linux binaries, macOS users can use Docker:
+
+1. **Dockerfile** provides an Ubuntu 22.04 container
+2. **run_docker.sh** automates building and running executables
+3. All generated binaries are copied to `/app/` in the container
+4. Exit codes are properly returned (e.g., 42 for `simple_expr`)
+
+```bash
+# Quick test
+./run_docker.sh
+
+# Custom execution
+docker run --rm jit-elf-runner /app/calculator
+```
+
 ## Resources
 
 - [ASM Library Documentation](https://asm.ow2.io/)
 - [JVM Specification](https://docs.oracle.com/javase/specs/jvms/se17/html/)
 - [Java Bytecode Instructions](https://en.wikipedia.org/wiki/Java_bytecode_instruction_listings)
+- [ELF Format Specification](https://en.wikipedia.org/wiki/Executable_and_Linkable_Format)
+- [x86-64 Instruction Reference](https://www.felixcloutier.com/x86/)
+- [Linux System Call Table](https://chromium.googlesource.com/chromiumos/docs/+/master/constants/syscalls.md)
 
 ## Author
 
